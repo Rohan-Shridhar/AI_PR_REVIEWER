@@ -80,10 +80,11 @@ const RepositoryPageClient = () => {
 
 	const allRepositories = data?.pages.flatMap((page) => page) || [];
 
+	const trimmedQuery = searchQuery.trim().toLowerCase();
 	const filteredRepositories = allRepositories.filter(
 		(repo: Repository) =>
-			repo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-			repo.full_name.toLowerCase().includes(searchQuery.toLowerCase())
+			repo.name.toLowerCase().includes(trimmedQuery) ||
+			repo.full_name.toLowerCase().includes(trimmedQuery)
 	);
 
 	const handleConnect = (repo: Repository) => {
