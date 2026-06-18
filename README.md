@@ -86,7 +86,7 @@ AI-powered GitHub code review platform that automatically reviews pull requests,
 
 ## 📂 Project Structure
 
-`````text
+```text
 Repository
 └──ai_pr_reviewer/
     ├── README.md
@@ -227,7 +227,7 @@ Repository
         └── PULL_REQUEST_TEMPLATE/
             └── PULL_REQUEST_TEMPLATE.
 
-`````
+```
 
 ---
 
@@ -244,20 +244,19 @@ Repository
 ### Installation
 ```bash
 git clone https://github.com/your-username/AI_PR_REVIEWER.git
-````
+```
 ```bash
 cd AI_PR_REVIEWER
-````
+```
 ```bash
 npm install
-
-`````
+```
 
 ### Environment Variables
 
 Create a `.env` file:
 
-`````env
+```env
 DATABASE_URL=
 NEXT_PUBLIC_APP_URL=
 NEXT_PUBLIC_APP_BASE_URL=
@@ -282,7 +281,7 @@ BETTER_AUTH_URL=
 POLAR_ACCESS_TOKEN=
 POLAR_WEBHOOK_SECRET=
 POLAR_SUCCESS_URL=
-`````
+```
 
 ### Start Development Server
 
