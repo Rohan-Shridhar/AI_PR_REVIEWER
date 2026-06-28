@@ -235,66 +235,132 @@ Repository
 
 ### Prerequisites
 
-* Node.js 20+
-* PostgreSQL
-* GitHub OAuth App
-* Pinecone Account
-* AI Provider API Key
+Make sure you have the following installed and ready:
 
-### Installation
+- [Node.js](https://nodejs.org/) v20 or higher
+- [PostgreSQL](https://www.postgresql.org/) (local or hosted, e.g. [Neon](https://neon.tech), [Supabase](https://supabase.com))
+- [Git](https://git-scm.com/)
+- A [GitHub OAuth App](https://github.com/settings/developers) (for authentication + API access)
+- A [Pinecone](https://www.pinecone.io/) account (vector database for RAG-based reviews)
+- An AI provider API key — any OpenAI-compatible provider (e.g. [Google AI Studio](https://aistudio.google.com/), [OpenRouter](https://openrouter.ai/), OpenAI)
+- A [Polar.sh](https://polar.sh/) account (for subscription/billing)
+
+---
+
+### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/your-username/AI_PR_REVIEWER.git
-````
-```bash
+git clone https://github.com/AnitSarkar123/AI_PR_REVIEWER.git
 cd AI_PR_REVIEWER
-````
+```
+
+---
+
+### 2. Install Dependencies
+
 ```bash
 npm install
+```
 
-`````
+---
 
-### Environment Variables
+### 3. Create a GitHub OAuth App
 
-Create a `.env` file:
+1. Go to [GitHub → Settings → Developer settings → OAuth Apps](https://github.com/settings/developers)
+2. Click **New OAuth App**
+3. Fill in:
+   - **Homepage URL:** `http://localhost:3000`
+   - **Authorization callback URL:** `http://localhost:3000/api/auth/callback/github`
+4. Copy the **Client ID** and generate a **Client Secret**
 
-`````env
-DATABASE_URL=
-NEXT_PUBLIC_APP_URL=
-NEXT_PUBLIC_APP_BASE_URL=
+---
 
-# GitHub Auth & API
-GITHUB_CLIENT_ID=
-GITHUB_CLIENT_SECRET=
+### 4. Set Up Environment Variables
 
-# AI Review Engine (OpenAI Compatible)
-OPENAI_COMPATIBLE_API_KEY=
-OPENAI_COMPATIBLE_BASE_URL=
-OPENAI_COMPATIBLE_MODEL=
+Create a `.env` file in the project root:
 
-# Vector Database
-PINECONE_DB_API_KEY=
+```bash
+cp .env.example .env
+```
 
-# Authentication (Better-Auth)
-BETTER_AUTH_SECRET=
-BETTER_AUTH_URL=
+Then fill in all values:
 
-# Payments (Polar.sh)
-POLAR_ACCESS_TOKEN=
-POLAR_WEBHOOK_SECRET=
-POLAR_SUCCESS_URL=
-`````
+```env
+# PostgreSQL connection string
+DATABASE_URL=postgresql://user:password@localhost:5432/ai_pr_reviewer
 
-### Start Development Server
+# App URLs
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+NEXT_PUBLIC_APP_BASE_URL=http://localhost:3000
+
+# GitHub OAuth App (from Step 3)
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+
+# AI Provider — any OpenAI-compatible API
+# e.g. Google AI Studio base URL: https://generativelanguage.googleapis.com/v1beta/openai
+OPENAI_COMPATIBLE_API_KEY=your_api_key
+OPENAI_COMPATIBLE_BASE_URL=https://api.openai.com/v1
+OPENAI_COMPATIBLE_MODEL=gpt-4o
+
+# Pinecone — create an index at https://app.pinecone.io
+PINECONE_DB_API_KEY=your_pinecone_api_key
+
+# Better Auth — generate a random secret: openssl rand -base64 32
+BETTER_AUTH_SECRET=your_random_secret
+BETTER_AUTH_URL=http://localhost:3000
+
+# Polar.sh — from your Polar dashboard
+POLAR_ACCESS_TOKEN=your_polar_access_token
+POLAR_WEBHOOK_SECRET=your_polar_webhook_secret
+POLAR_SUCCESS_URL=http://localhost:3000/dashboard/subscriptions
+```
+
+---
+
+### 5. Set Up the Database
+
+Run Prisma migrations to create all tables:
+
+```bash
+npx prisma migrate dev
+```
+
+Optionally, open Prisma Studio to inspect your database:
+
+```bash
+npx prisma studio
+```
+
+---
+
+### 6. Start the Development Server
 
 ```bash
 npm run dev
 ```
 
-Open:
+Visit [http://localhost:3000](http://localhost:3000) to see the app.
 
-```text
-http://localhost:3000
-```
+---
+
+### 7. Configure GitHub Webhook
+
+For AI reviews to trigger automatically on pull requests:
+
+1. Go to your target GitHub repository → **Settings → Webhooks → Add webhook**
+2. Set:
+   - **Payload URL:** `https://your-domain.com/api/webhooks/github`
+     *(use [ngrok](https://ngrok.com/) for local testing: `ngrok http 3000`)*
+   - **Content type:** `application/json`
+   - **Events:** Select **Pull requests**
+3. Save the webhook
+
+Once configured, opening or updating a PR will automatically trigger an AI review.
+
+---
+
+This is ready to paste directly into the README to close issue #37. The key additions are the OAuth App setup steps, env variable explanations, the `prisma migrate dev` step, and the webhook configuration — all the parts that were missing.
 
 ---
 
