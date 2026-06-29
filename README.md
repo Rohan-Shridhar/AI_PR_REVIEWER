@@ -314,6 +314,10 @@ BETTER_AUTH_URL=http://localhost:3000
 POLAR_ACCESS_TOKEN=your_polar_access_token
 POLAR_WEBHOOK_SECRET=your_polar_webhook_secret
 POLAR_SUCCESS_URL=http://localhost:3000/dashboard/subscriptions
+
+# Inngest (auto-detected locally, but set for production)
+INNGEST_EVENT_KEY=your_inngest_event_key
+INNGEST_SIGNING_KEY=your_inngest_signing_key
 ```
 
 ---
@@ -360,7 +364,18 @@ Once configured, opening or updating a PR will automatically trigger an AI revie
 
 ---
 
-This is ready to paste directly into the README to close issue #37. The key additions are the OAuth App setup steps, env variable explanations, the `prisma migrate dev` step, and the webhook configuration — all the parts that were missing.
+### 8. Start the Inngest Dev Server
+Inngest handles background jobs like automated PR review generation. You need to run it alongside the Next.js dev server.
+In a separate terminal, run:
+```bash
+npx inngest-cli@latest dev
+````
+This starts the Inngest dev server at http://localhost:8288 and connects to your Next.js app at http://localhost:3000/api/inngest.
+You can open the Inngest dashboard at http://localhost:8288 to monitor and replay background functions.
+
+> [!note]
+> Both servers must be running simultaneously — npm run dev in one terminal and npx inngest-cli@latest dev in another.
+
 
 ---
 
